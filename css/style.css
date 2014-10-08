@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+
+.someDiv {
+	left: 0px;
+	top: 0px;
+	width: 400px;
+	height: 400px;
+	background-color: #ccc;
+}
+
+canvas {
+	position: absolute;
+	z-index: 1;
+}
