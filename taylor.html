@@ -11,44 +11,60 @@
 	<div class="someDiv">
 		<canvas id="someCanvas"></canvas>
 	</div>
-	<div>Click on the box.</div>
-	<script type="text/javascript" src="js/ParticleMachine.js"></script>
+	<button onclick="startup()">Click to start.</button>
+	<script type="text/javascript" src="js/ParticleMachineTaylor.js"></script>
 	<script type="text/javascript" src="js/utils.js"></script>
 	<script type="text/javascript" src="libs/gs/TweenMax.min.js"></script>
+	<script language="javascript" src="js/p5.js"></script>
+	<script language="javascript" src="js/addons/p5.dom.js"></script>
+	<script language="javascript" src="js/addons/p5.sound.js"></script>
 
-	<script type="text/javascript">
-		$(function() {
+	
+
+	<script>
+	
+
+	
+		var p0Machine, mic, fft, inited=false;
+		var pos = 0;
+		function setup() {
+			mic = new p5.AudioIn()
+			mic.start()
+			fft = new p5.FFT();
+			fft.setInput(mic, 128);
+			p0Machine = new ParticleMachine(
+					'data/taylor-logo-red-yellow-border.json', '.someDiv',
+					'#someCanvas');
 			
-			var inited = false;
-			var p0Machine = new ParticleMachine('data/taylor-logo-red-yellow-border.json',
-					'.someDiv', '#someCanvas');
-			var anim;
-			var twObj;
-			TweenLite.defaultEase = Bounce.easeIn;
+		}
+		
+		function startup() {
+			p0Machine.init();
+			inited = true;
+		}
+		
+		function draw() {
+
+			var volume = mic.getLevel();
+			var spectrum = fft.analyze();
 			
-			$(".someDiv").click(function() {
-				if (!inited) {
-					inited = true;
-					p0Machine.init();
-				}
-				beginAnimation();
-			});
+
+			/* for (i = 0; i < spectrum.length; i++) {
+				console.log(spectrum[i]);
+			} */
 			
-			/*
-				Using this tween to push the particles.
-				In our usage we used the scroll position
-				to update.
-			*/
-			function beginAnimation() {
-				twObj = {val:0};
-				anim = TweenLite.fromTo(twObj, 2, {val:0}, {val:1});
-				anim.eventCallback("onUpdate", tweenUpdate);
+			if (volume > .02) {
+				if (inited) pos += volume/10;
+				if (inited) p0Machine.setPosition(pos);
 			}
-			
-			function tweenUpdate() {
-				p0Machine.setPosition(twObj.val);
-			}
-		});
+		}
+
+/* 		function didRiseAbove(volume) {
+			var threshold = 0.1;
+			return (volume > threshold)
+		} */
+	
 	</script>
+
 </body>
 </html>
