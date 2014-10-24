@@ -34,8 +34,6 @@
 			
 		}
 		
-		
-		
 		function startup() {
 			p0Machine.init();
 			inited = true;
@@ -51,9 +49,15 @@
 				console.log(spectrum[i]);
 			} */
 			
-			if (volume > .02) {
+			/* if (volume > .02) {
 				if (inited) pos += volume/10;
 				if (inited) p0Machine.setPosition(pos);
+			} */
+			
+			if (volume > .02) {
+				if (inited) p0Machine.setSpectrum(spectrum, volume);
+			} else {
+				if (inited) p0Machine.setPosition(1);
 			}
 		}
 

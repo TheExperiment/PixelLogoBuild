@@ -12,6 +12,8 @@ function ParticleMachine(data, target, canvasId) {
 	this.winW;
 	this.winH;
 	this.tween;
+	this.spectrum;
+	this.vol;
 	this.twObj = {
 		val : 0
 	};
@@ -36,9 +38,15 @@ function ParticleMachine(data, target, canvasId) {
 	}
 
 	this.setPosition = function(pos) { // pos = 0-1
-		if (pos == this.twObj.val) return;
+		//if (pos == this.twObj.val) return;
 		this.twObj.val = pos;
 		this.tweenUpdate();
+	}
+	
+	this.setSpectrum = function(spectrum, vol) { 
+		this.spectrum = spectrum;
+		this.vol = vol;
+		this.spectrumUpdate();
 	}
 
 	this.resetCanvas = function() {
@@ -84,6 +92,41 @@ function ParticleMachine(data, target, canvasId) {
 			var p2A = point2['a'];
 			
 			var perc = Math.min(this.twObj.val, 1);
+			nextPoint['x'] = p1X + ((p2X - p1X) * perc);
+			nextPoint['y'] = p1Y + ((p2Y - p1Y) * perc);
+			nextPoint['r'] = p1R + ((p2R - p1R) * perc);
+			nextPoint['g'] = p1G + ((p2G - p1G) * perc);
+			nextPoint['b'] = p1B + ((p2B - p1B) * perc);
+			nextPoint['a'] = p1A + ((p2A - p1A) * perc);
+			
+			nextPlots.push(nextPoint);
+		}
+		this.clear();
+		this.draw(nextPlots);
+	};
+	
+	this.spectrumUpdate = function() {
+		var nextPlots = [];
+		for (var i = 0; i < this.plot_points_end.length; i++) {
+			var point1 = this.plot_points_start[i];
+			var point2 = this.plot_points_end[i];
+			var nextPoint = {};
+			var p1X = point1['x'];
+			var p1Y = point1['y'];
+			var p2X = point2['x'];
+			var p2Y = point2['y'];
+
+			var p1R = point1['r'];
+			var p2R = point2['r'];
+			var p1G = point1['g'];
+			var p2G = point2['g'];
+			var p1B = point1['b'];
+			var p2B = point2['b'];
+			var p1A = point1['a'];
+			var p2A = point2['a'];
+			
+			var val = this.spectrum[i%this.spectrum.length]/255;
+			var perc = (1-val) + this.vol;
 			nextPoint['x'] = p1X + ((p2X - p1X) * perc);
 			nextPoint['y'] = p1Y + ((p2Y - p1Y) * perc);
 			nextPoint['r'] = p1R + ((p2R - p1R) * perc);
