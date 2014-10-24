@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="js/jquery-2.1.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<meta charset="UTF-8">
+<title>The Experiment - Design and Technology Studio</title>
+</head>
+<body>
+	<div class="someDiv">
+		<canvas id="someCanvas"></canvas>
+	</div>
+	<div>Click on the box.</div>
+	<script type="text/javascript" src="js/ParticleMachine.js"></script>
+	<script type="text/javascript" src="js/utils.js"></script>
+	<script type="text/javascript" src="libs/gs/TweenMax.min.js"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			
+			var inited = false;
+			var p0Machine = new ParticleMachine('data/taylor-logo-red-yellow-border.json',
+					'.someDiv', '#someCanvas');
+			var anim;
+			var twObj;
+			TweenLite.defaultEase = Bounce.easeIn;
+			
+			$(".someDiv").click(function() {
+				if (!inited) {
+					inited = true;
+					p0Machine.init();
+				}
+				beginAnimation();
+			});
+			
+			/*
+				Using this tween to push the particles.
+				In our usage we used the scroll position
+				to update.
+			*/
+			function beginAnimation() {
+				twObj = {val:0};
+				anim = TweenLite.fromTo(twObj, 2, {val:0}, {val:1});
+				anim.eventCallback("onUpdate", tweenUpdate);
+			}
+			
+			function tweenUpdate() {
+				p0Machine.setPosition(twObj.val);
+			}
+		});
+	</script>
+</body>
+</html>

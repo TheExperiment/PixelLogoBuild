@@ -1,7 +1,7 @@
 <?php
 
 // usage :
-// GET &inputFileName = someImage.png
+// GET &inputFileName = data/someImage.png
 // GET &outputFileName = 'data/someImage.json';
 
 $inputFileName = '';
